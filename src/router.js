@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from './views/Index.vue'
 import Verify from './views/Verify.vue'
+import Login from './views/Login.vue'
 import Recommend from './views/Recommend.vue'
 
 Vue.use(Router)
@@ -12,6 +13,11 @@ export default new Router({
       path: '/',
       name: 'index',
       component: Index
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
       path: '/verify',

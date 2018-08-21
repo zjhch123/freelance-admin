@@ -1,8 +1,46 @@
 <template>
-  <div class="g-user-detail">
+  <div class="g-userDetail">
     <main>
+      <SimpleRow className="u-row" name="用户名">
+        {{person.name}}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="类型">
+        <el-tag v-if="person.isVerifying === 1" type="success">新用户</el-tag>
+        <el-tag v-if="person.isVerifying === 2" type="warning">审核中</el-tag>
+        <el-tag v-if="person.isVerifying === 0" type="info">正常用户</el-tag>
+        <el-tag v-if="person.isVerifying === -1" type="danger">审核被拒</el-tag>
+      </SimpleRow>
       <SimpleRow className="u-row" name="个人照片">
-        {{msg}}
+        <UserHeader :src="person.header" :width="52"/>
+      </SimpleRow>
+      <SimpleRow className="u-row" name="城市">
+        {{ person.city }}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="院校专业">
+        {{ person.school }} {{ person.grade }} {{ person.major }}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="从事职业">
+        {{ person.job }}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="主要作品">
+        {{ person.production }}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="主要职业">
+        {{ person.jobs.join(' ') }}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="代表作品">
+        {{ person.productions.join(' ') }}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="个人介绍">
+        <span v-for="(row, i) in person.introduction.split('\n')" :key="i">
+          {{row}} <br/>
+        </span>
+      </SimpleRow>
+      <SimpleRow className="u-row" name="注册时间">
+        {{person.createdAt.replace(/T|Z/g, ' ').split('.')[0]}}
+      </SimpleRow>
+      <SimpleRow className="u-row" name="更新时间">
+        {{person.updatedAt.replace(/T|Z/g, ' ').split('.')[0]}}
       </SimpleRow>
     </main>
   </div>
@@ -11,10 +49,9 @@
 import SimpleRow from '@/components/SimpleRow'
 import UserHeader from '@/components/UserHeader'
 export default {
-  props: [ 'msg' ],
+  props: [ 'person' ],
   data() {
     return {
-      person: {}
     }
   },
   components: {
@@ -23,104 +60,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.g-edit {
-  padding-top: .65rem;
+.g-userDetail {
+  padding-top: 10px;
   margin: auto;
-  padding-bottom: 1rem;
+  padding-bottom: 10px;
 }
 .flexable {
   display: flex;
-  padding-left: .4rem;
-  padding-right: .5rem;
-  &.space {
-    justify-content: space-between;
-  }
 }
 .u-row {
-  margin: .4rem 0;
-}
-.m-photo {
-  align-items: center;
-  .upload {
-    margin-left: .8rem;
-    position: relative;
-    .upload-btn {
-      width: 1rem;
-      height: .5rem;
-      line-height: .5rem;
-      display: block;
-      text-align: center;
-      color: white;
-      background-color: #a8c6da;
-      font-size: .2rem;
-    }
-  } 
-}
-.u-input {
-  flex: 1;
-  border: 1px solid #b5b5b5;
-  border-radius: 0;
-  padding-left: .08rem;
-  height: .4rem;
-  line-height: .4rem;
-  font-size: .2rem;
-  appearance: none;
-  &.u-input1of3 {
-    width: 28%;
-    flex: none;
-  }
-}
-textarea[class="u-input"] {
-  height: 1rem;
-  line-height: 1.4;
-  resize: none;
-}
-.save-btn {
-  width: 1rem;
-  height: .5rem;
-  line-height: .5rem;
-  margin: auto;
-  display: block;
-  text-align: center;
-  color: white;
-  background-color: #a8c6da;
-  font-size: .2rem;
-}
-.u-upload-component {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,.6);
-  z-index: 100;
-  .close-modal {
-    color: white;
-    font-size: .28rem;
-    position: absolute;
-    right: .2rem;
-    top: .2rem;
-  }
-  .u-upload {
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    .btn {
-      width: 1.5rem;
-      line-height: .5rem;
-      height: .5rem;
-      display: inline-block;
-      font-size: .2rem;
-      color: white;
-      margin: .2rem .2rem;
-      &.cancel {
-        background-color: #a8c6da;
-      }
-      &.submit {
-        background-color:red;
-      }
-    }
-  }
+  margin: 12px 0;
 }
 </style>

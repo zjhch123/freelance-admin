@@ -22,15 +22,16 @@ export default {
 .u-simple-row {
   display: flex;
   color: #7b7b7b;
-  font-size: .24rem;
-  margin: .2rem auto;
+  font-size: 14px;
+  margin: 20px auto;
+  align-items: center;
   .key {
     text-align: right;
-    flex: 0 0 2rem;
+    flex: 0 0 90px;
     font-weight: bolder;
   }
   .value {
-    padding-left: .1rem;
+    padding-left: 10px;
     text-align: left;
     flex: 1;
   }

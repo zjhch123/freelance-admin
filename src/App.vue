@@ -18,7 +18,6 @@ export default {
   name: 'app',
   mounted() {
   },
-  
   components: {
     HeaderNav
   }
