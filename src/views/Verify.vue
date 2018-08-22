@@ -81,7 +81,7 @@
     <el-dialog
       title="用户详情"
       :visible.sync="userDetailShow"
-      width="30%"
+      width="500px"
       center>
       <UserDetail :person="this.personDetail"/>
       <div class="u-controller">

@@ -4,6 +4,7 @@ import Index from './views/Index.vue'
 import Verify from './views/Verify.vue'
 import Login from './views/Login.vue'
 import Recommend from './views/Recommend.vue'
+import Message from './views/Message.vue'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/recommend',
       name: 'recommend',
       component: Recommend
+    },
+    {
+      path: '/message',
+      name: 'message',
+      component: Message
     }
   ]
 })

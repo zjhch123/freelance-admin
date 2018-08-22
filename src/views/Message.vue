@@ -76,7 +76,7 @@
           align="center">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="showUserDetail(scope.row.id)">查看详情</el-button>
-            <el-button type="danger" size="mini" @click="handleClickSetUser(scope.row.id, 1)">设为推荐</el-button>
+            <el-button type="danger" size="mini" @click="handleClickUser(scope.row.id)">发送消息</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -91,65 +91,6 @@
         :page-count="this.totalPage">
       </el-pagination>
     </div>
-    <div class="m-hot-table">
-      <h1>推荐用户</h1>
-      <el-table
-        :data="hotUser"
-        style="width: 100%">
-        <el-table-column
-          prop="id"
-          label="用户ID"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          label="用户名"
-          width="200">
-          <template slot-scope="scope">
-            <div class="u-user-info">
-              <UserHeader :src="scope.row.header" class="header" :width="42"></UserHeader>
-              <span class="username">{{scope.row.name}}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="院校专业">
-          <template slot-scope="scope">
-            {{scope.row.school}} {{scope.row.grade}} {{scope.row.major}}
-          </template>
-        </el-table-column>
-        <el-table-column
-          width="170"
-          label="注册时间">
-          <template slot-scope="scope">
-            {{scope.row.createdAt.replace(/T|Z/g, ' ').split('.')[0]}}
-          </template>
-        </el-table-column>
-        <el-table-column
-          width="170"
-          label="更新时间">
-          <template slot-scope="scope">
-            {{scope.row.updatedAt.replace(/T|Z/g, ' ').split('.')[0]}}
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="类型"
-          width="100"
-          align="center">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.userType === 1" type="success">新用户</el-tag>
-            <el-tag v-if="scope.row.userType === 0" type="info">正常用户</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          align="center">
-          <template slot-scope="scope">
-            <el-button type="warning" size="mini" @click="showUserDetail(scope.row.id)">查看详情</el-button>
-            <el-button type="danger" size="mini" @click="handleClickSetUser(scope.row.id, 0)">取消推荐</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
     <el-dialog
       title="用户详情"
       :visible.sync="userDetailShow"
@@ -157,10 +98,20 @@
       center>
       <UserDetail :person="this.personDetail"/>
     </el-dialog>
+    <el-dialog
+      title="发送消息"
+      :visible.sync="msgBox"
+      width="500px">
+      <el-input v-model="message.content" placeholder="请输入内容"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel()">取 消</el-button>
+        <el-button type="primary" @click="send()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getAllUser, getHotUser, getUserDetail, setHotUser } from '@/api/'
+import { getAllUser, getUserDetail, sendMessage } from '@/api/'
 import UserHeader from '@/components/UserHeader'
 import UserDetail from '@/components/UserDetail'
 import { Message } from 'element-ui';
@@ -171,19 +122,22 @@ export default {
       totalPage: 1,
       personDetail: {},
       userDetailShow: false,
+      msgBox: false,
+      message: {
+        id: 0,
+        content: ''
+      },
       form: {
         userId: '',
         username: '',
         school: '',
         userType: null,
       },
-      hotUser: [],
       tableData: [],
     }
   },
   mounted() {
     this.getData(this.page)
-    this.getHotUser()
   },
   components: {
     UserHeader, UserDetail
@@ -191,12 +145,6 @@ export default {
   methods: {
     search() {
       this.getData(1)
-    },
-    async getHotUser() {
-      const result = await getHotUser()
-      if (result.code === 200) {
-        this.hotUser = result.content
-      }
     },
     async handleCurrentChange(val) {
       this.getData(val)
@@ -227,17 +175,24 @@ export default {
         this.userDetailShow = true
       }
     },
-    async handleClickSetUser(id, type) {
-      const result = await setHotUser(id, type)
-      if (result.code === 200) {
-        Message.success('操作成功!')
-        this.userDetailShow = false
-      } else {
-        Message.warning('操作失败, 请检查网络')
-      }
-      await this.getData(this.page)
-      await this.getHotUser()
+    handleClickUser(id) {
+      this.message.id = id
+      this.msgBox = true
     },
+    cancel() {
+      this.message = {
+        id: 0,
+        content: '',
+      }
+      this.msgBox = false
+    },
+    async send() {
+      const result = await sendMessage(this.message)
+      if (result.code === 200) {
+        Message.success('操作成功')
+        this.cancel()
+      }
+    }
   }
 }
 </script>

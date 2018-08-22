@@ -1,4 +1,5 @@
 import router from '../router'
+import Cookie from 'js-cookie'
 
 export function getUserDetail(id) {
   return fetch(`/api/admin/getUserDetail?id=${id}`, {credentials: 'include'}).then(res => res.json()).then(res => {
@@ -87,6 +88,26 @@ export function getHotUser() {
 
 export function setHotUser(id, type) {
   return fetch(`/api/admin/setHotUser?id=${id}&type=${type}`, { credentials: 'include' }).then(res => res.json()).then(res => {
+    if (res.code === 401) {
+      router.push({
+        name: 'login'
+      })
+      throw new Error('no login!')
+    }
+    return res
+  })
+}
+
+export function sendMessage(body) {
+  return fetch(`/api/admin/sendMessage`, { 
+    credentials: 'include',
+    body: JSON.stringify(body),
+    headers: {
+      'x-csrf-token': Cookie.get('csrfToken'),
+      'content-type': 'application/json; charset=utf-8'
+    },
+    method: 'post',
+  }).then(res => res.json()).then(res => {
     if (res.code === 401) {
       router.push({
         name: 'login'

@@ -11,6 +11,7 @@
       <el-menu-item class="menu-item" index="/"><router-link class="router" to="/">首页</router-link></el-menu-item>
       <el-menu-item class="menu-item" index="/verify"><router-link class="router" to="/verify">用户审核</router-link></el-menu-item>
       <el-menu-item class="menu-item" index="/recommend"><router-link class="router" to="/recommend">首页推荐</router-link></el-menu-item>
+      <el-menu-item class="menu-item" index="/message"><router-link class="router" to="/message">发送消息</router-link></el-menu-item>
     </el-menu>
   </div>
 </template>

@@ -8,8 +8,8 @@ cache:
   - node_modules
 install:
 - npm install
-after_success:
-- ssh root@139.129.132.196 StrictHostKeyChecking=no 'cd /var/packages/freelancer-admin && git pull && sh ./deploy.sh'
+# after_success:
+# - ssh root@139.129.132.196 StrictHostKeyChecking=no 'cd /var/packages/freelancer-admin && git pull && sh ./deploy.sh'
 before_install:
 - openssl aes-256-cbc -K $encrypted_b640eece0d23_key -iv $encrypted_b640eece0d23_iv
   -in id_rsa.enc -out ~/.ssh/id_rsa -d
