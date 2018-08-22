@@ -30,7 +30,7 @@
         {{ person.productions.join(' ') }}
       </SimpleRow>
       <SimpleRow className="u-row" name="个人介绍">
-        <span v-for="(row, i) in person.introduction.split('\n')" :key="i">
+        <span v-for="(row, i) in (person.introduction || '').split('\n')" :key="i">
           {{row}} <br/>
         </span>
       </SimpleRow>
