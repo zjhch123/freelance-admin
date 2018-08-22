@@ -12,6 +12,19 @@ export function getUserDetail(id) {
   })
 }
 
+export function getTempUserDetail(id) {
+  return fetch(`/api/admin/getTempUserDetail?id=${id}`, {credentials: 'include'}).then(res => res.json()).then(res => {
+    if (res.code === 401) {
+      router.push({
+        name: 'login'
+      })
+      throw new Error('no login!')
+    }
+    return res
+  })
+}
+
+
 export function getUnVerifyUser(page, count = 10, condition = {}) {
   let queryString = [];
   for (const key in condition) {

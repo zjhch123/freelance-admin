@@ -1,0 +1,12 @@
+language: node_js
+node_js: 8.5
+sudo: required
+addons:
+  ssh_known_hosts: 139.129.132.196
+cache:
+  directories:
+  - node_modules
+install:
+- npm install
+after_success:
+- ssh root@139.129.132.196 StrictHostKeyChecking=no 'cd /var/packages/freelancer-admin && git pull && sh ./deploy.sh'

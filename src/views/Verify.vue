@@ -2,21 +2,11 @@
   <div class="g-verify">
     <div class="m-search">
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item label="用户ID">
-          <el-input size="medium" v-model="form.userId" placeholder="用户名"></el-input>
-        </el-form-item>
         <el-form-item label="用户昵称">
           <el-input size="medium" v-model="form.username" placeholder="用户昵称"></el-input>
         </el-form-item>
         <el-form-item label="用户院校">
           <el-input size="medium" v-model="form.school" placeholder="用户院校"></el-input>
-        </el-form-item>
-        <el-form-item label="用户状态">
-          <el-select size="medium" v-model="form.isVerifying" placeholder="用户状态">
-            <el-option label="所有状态" :value="null"></el-option>
-            <el-option label="新户注册" :value="1"></el-option>
-            <el-option label="更新资料" :value="2"></el-option>
-          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="this.search">查询</el-button>
@@ -32,11 +22,6 @@
         <el-table-column
           type="selection"
           width="55">
-        </el-table-column>
-        <el-table-column
-          prop="id"
-          label="用户ID"
-          width="100">
         </el-table-column>
         <el-table-column
           label="用户名"
@@ -56,7 +41,7 @@
         </el-table-column>
         <el-table-column
           width="170"
-          label="注册时间">
+          label="提交时间">
           <template slot-scope="scope">
             {{scope.row.createdAt.replace(/T|Z/g, ' ').split('.')[0]}}
           </template>
@@ -69,22 +54,12 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="类型"
-          width="100"
-          align="center">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.isVerifying === 1 ? 'success' : 'warning'">
-              {{scope.row.isVerifying === 1 ? '新户注册' : '更新资料'}}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
           label="操作"
           align="center">
           <template slot-scope="scope">
             <el-button type="warning" size="mini" @click="showUserDetail(scope.row.id)">详情</el-button>
-            <el-button type="success" size="mini" @click="handleClickVerifyUser(scope.row.id, 0)">通过</el-button>
-            <el-button type="danger" size="mini" @click="handleClickVerifyUser(scope.row.id, -1)">驳回</el-button>
+            <el-button type="success" size="mini" @click="handleClickVerifyUser(scope.row.id, 1)">通过</el-button>
+            <el-button type="danger" size="mini" @click="handleClickVerifyUser(scope.row.id, 0)">驳回</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,8 +68,8 @@
       <div class="u-btn">
         <el-button type="primary" size="mini" @click="handleSelectAll">全选</el-button>
         <el-button type="primary" size="mini" @click="handleClearAll">反选</el-button>
-        <el-button type="success" size="mini" @click="handleClickVerifyAllUser(0)">批量通过</el-button>
-        <el-button type="danger" size="mini" @click="handleClickVerifyAllUser(-1)">批量驳回</el-button>
+        <el-button type="success" size="mini" @click="handleClickVerifyAllUser(1)">批量通过</el-button>
+        <el-button type="danger" size="mini" @click="handleClickVerifyAllUser(0)">批量驳回</el-button>
       </div>
       <el-pagination
         layout="prev, pager, next"
@@ -110,14 +85,14 @@
       center>
       <UserDetail :person="this.personDetail"/>
       <div class="u-controller">
-        <el-button type="success" size="mini" @click="handleClickVerifyUser(personDetail.id, 0)">通过</el-button>
-        <el-button type="danger" size="mini" @click="handleClickVerifyUser(personDetail.id, -1)">驳回</el-button>
+        <el-button type="success" size="mini" @click="handleClickVerifyUser(personDetail.id, 1)">通过</el-button>
+        <el-button type="danger" size="mini" @click="handleClickVerifyUser(personDetail.id, 0)">驳回</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { getUnVerifyUser, getUserDetail, verifyUser } from '@/api/'
+import { getUnVerifyUser, getTempUserDetail, verifyUser } from '@/api/'
 import UserHeader from '@/components/UserHeader'
 import UserDetail from '@/components/UserDetail'
 import { Message } from 'element-ui';
@@ -130,10 +105,9 @@ export default {
       personDetail: {},
       userDetailShow: false,
       form: {
-        userId: '',
+        // userId: '',
         username: '',
         school: '',
-        isVerifying: null,
       },
       tableData: [],
     }
@@ -166,17 +140,14 @@ export default {
     },
     async getData(page) {
       const condition = {}
-      if (this.form.userId !== '') {
-        condition.id = this.form.userId
-      }
+      // if (this.form.userId !== '') {
+      //   condition.id = this.form.userId
+      // }
       if (this.form.username !== '') {
         condition.username = this.form.username
       }
       if (this.form.school !== '') {
         condition.school = this.form.school
-      }
-      if (this.form.isVerifying !== null) {
-        condition.isVerifying = this.form.isVerifying
       }
       const result = await getUnVerifyUser(page, 10, condition)
       this.page = page
@@ -184,7 +155,7 @@ export default {
       this.totalPage = result.content.totalPage
     },
     async showUserDetail(oId) {
-      const result = await getUserDetail(oId)
+      const result = await getTempUserDetail(oId)
       if (result.code === 200 && result.content !== null) {
         this.personDetail = result.content
         this.userDetailShow = true

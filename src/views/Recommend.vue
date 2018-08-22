@@ -12,12 +12,10 @@
           <el-input size="medium" v-model="form.school" placeholder="用户院校"></el-input>
         </el-form-item>
         <el-form-item label="用户状态">
-          <el-select size="medium" v-model="form.isVerifying" placeholder="用户状态">
+          <el-select size="medium" v-model="form.userType" placeholder="用户状态">
             <el-option label="所有状态" :value="null"></el-option>
             <el-option label="正常用户" :value="0"></el-option>
-            <el-option label="新户注册" :value="1"></el-option>
-            <el-option label="审核中" :value="2"></el-option>
-            <el-option label="审核被拒" :value="-1"></el-option>
+            <el-option label="新用户" :value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -69,10 +67,8 @@
           width="100"
           align="center">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.isVerifying === 1" type="success">新用户</el-tag>
-            <el-tag v-if="scope.row.isVerifying === 2" type="warning">审核中</el-tag>
-            <el-tag v-if="scope.row.isVerifying === 0" type="info">正常用户</el-tag>
-            <el-tag v-if="scope.row.isVerifying === -1" type="danger">审核被拒</el-tag>
+            <el-tag v-if="scope.row.userType === 1" type="success">新用户</el-tag>
+            <el-tag v-if="scope.row.userType === 0" type="info">正常用户</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -140,10 +136,8 @@
           width="100"
           align="center">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.isVerifying === 1" type="success">新用户</el-tag>
-            <el-tag v-if="scope.row.isVerifying === 2" type="warning">审核中</el-tag>
-            <el-tag v-if="scope.row.isVerifying === 0" type="info">正常用户</el-tag>
-            <el-tag v-if="scope.row.isVerifying === -1" type="danger">审核被拒</el-tag>
+            <el-tag v-if="scope.row.userType === 1" type="success">新用户</el-tag>
+            <el-tag v-if="scope.row.userType === 0" type="info">正常用户</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -181,7 +175,7 @@ export default {
         userId: '',
         username: '',
         school: '',
-        isVerifying: null,
+        userType: null,
       },
       hotUser: [],
       tableData: [],
@@ -218,8 +212,8 @@ export default {
       if (this.form.school !== '') {
         condition.school = this.form.school
       }
-      if (this.form.isVerifying !== null) {
-        condition.isVerifying = this.form.isVerifying
+      if (this.form.userType !== null) {
+        condition.userType = this.form.userType
       }
       const result = await getAllUser(page, 10, condition)
       this.page = page

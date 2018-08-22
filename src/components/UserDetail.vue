@@ -4,11 +4,9 @@
       <SimpleRow className="u-row" name="用户名">
         {{person.name}}
       </SimpleRow>
-      <SimpleRow className="u-row" name="类型">
-        <el-tag v-if="person.isVerifying === 1" type="success">新用户</el-tag>
-        <el-tag v-if="person.isVerifying === 2" type="warning">审核中</el-tag>
-        <el-tag v-if="person.isVerifying === 0" type="info">正常用户</el-tag>
-        <el-tag v-if="person.isVerifying === -1" type="danger">审核被拒</el-tag>
+      <SimpleRow className="u-row" name="类型" v-if="person.userType">
+        <el-tag v-if="person.userType === 1" type="success">新用户</el-tag>
+        <el-tag v-if="person.userType === 0" type="info">正常用户</el-tag>
       </SimpleRow>
       <SimpleRow className="u-row" name="个人照片">
         <UserHeader :src="person.header" :width="52"/>
@@ -36,7 +34,7 @@
           {{row}} <br/>
         </span>
       </SimpleRow>
-      <SimpleRow className="u-row" name="注册时间">
+      <SimpleRow className="u-row" name="提交时间">
         {{person.createdAt.replace(/T|Z/g, ' ').split('.')[0]}}
       </SimpleRow>
       <SimpleRow className="u-row" name="更新时间">
