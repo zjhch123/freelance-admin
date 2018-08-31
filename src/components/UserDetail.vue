@@ -21,13 +21,15 @@
         {{ person.job }}
       </SimpleRow>
       <SimpleRow className="u-row" name="主要作品">
-        {{ person.production }}
+        <span v-for="(row, i) in (person.production || '').split('\n')" :key="i">
+          {{row}} <br/>
+        </span>
       </SimpleRow>
       <SimpleRow className="u-row" name="主要职业">
-        {{ person.jobs.join(' ') }}
+        {{ (person.jobs || []).join(' ') }}
       </SimpleRow>
       <SimpleRow className="u-row" name="代表作品">
-        {{ person.productions.join(' ') }}
+        {{ (person.productions || []).join(' ') }}
       </SimpleRow>
       <SimpleRow className="u-row" name="个人介绍">
         <span v-for="(row, i) in (person.introduction || '').split('\n')" :key="i">
